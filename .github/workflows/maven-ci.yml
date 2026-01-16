@@ -1,0 +1,41 @@
+name: Maven CI for bank-application (Repo 2)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'bank-application/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'bank-application/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run mvn clean test
+        working-directory: ./bank-application
+        run: mvn clean test
+
+      - name: Run mvn package
+        working-directory: ./bank-application
+        run: mvn package
+
+      - name: Upload target folder as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: bank-application/target/
